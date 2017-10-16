@@ -12,7 +12,7 @@ As you know, [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) is famous l
 
 ## How to use
 
-This is quite simple, but you should run the `get_datasets.sh`, which is download an actual data file(CIFAR-10 binary version). 
+This is quite simple, but you should run the `get_datasets.sh`, which downloads an actual data file(CIFAR-10 binary version). 
 
 ```
 var CIFAR10 = require('cifar-10');

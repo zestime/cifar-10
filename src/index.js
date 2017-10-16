@@ -4,7 +4,6 @@ import path from 'path';
 import _ from 'lodash';
 
 import { isStream, log } from './lib';
-import mapper from './mapper';
 
 const trainFileNames = [
   "data_batch_1.bin",
@@ -21,7 +20,7 @@ export default  {
     return fs.createReadStream(filename, {highWaterMark});
   },
 
-  createPromise(stream, {mapper, numOfchunk}) {
+  createPromise(stream, {mapper}) {
     const output = [];
     return new Promise((resolve, reject) => {
       const converter = data => output.push(mapper(data));
@@ -55,12 +54,12 @@ export default  {
   load(opt={
         dir: path.join(__dirname, 'cifar-10-batches-bin'),
         getFileName : i => `${this.dir}/data_batch_${i}.bin`,
-        highWaterMark: 10, 
-        numOfEntities: 10,
       }) {
 
     const trainFiles = _.range(1,6).map(i => opt.getFileName(i));
     const testFiles = opt.getFileName('test'); 
+
+    opt = opt.mapper || this.mapper;
 
     const inputInfo = {
       cols : 32,
@@ -71,18 +70,8 @@ export default  {
     const singleChannelSize = option.rows * option.cols;
     const imageSize = option.valueSize + option.singleChannelSize * option.channel;
 
-    const mapper = (chunk) => {
-      const y = chunk[0];
-      const X = _.range(channel)
-                 .map(i => new Uint8Array(img.slice(valueSize + singlechannelsize * i, valuesize + singlechannelsize * (i+1))));
-
-      return {
-        X, y
-      }
-    };
-
-    const { X_train = X, y_train = y } = combine(trainFiles);
-    const { X_test = X, y_test = y } = combine(testFiles);
+    const { X_train = X, y_train = y } = combine(trainFiles, opt);
+    const { X_test = X, y_test = y } = combine(testFiles, opt);
 
     return {
       X_train,

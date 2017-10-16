@@ -32,10 +32,10 @@ rr.on('data', chunk => {
   while(pos + imageSize <= chunk.length) {
     img = chunk.slice(pos, pos + imageSize);
     y[i] = chunk[0];
-    X[i] = 
+    x[i] = 
       _.range(channel)
-       .map(i => new Uint8Array(img.slice(valueSize + singleChannelSize * i, valueSize + singleChannelSize * (i+1))));
-    pos += imageSize;
+       .map(i => new uint8array(img.slice(valuesize + singlechannelsize * i, valuesize + singlechannelsize * (i+1))));
+    pos += imagesize;
     i++;
   }
   const mod = chunk.length % imageSize;

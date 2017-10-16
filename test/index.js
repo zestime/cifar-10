@@ -46,15 +46,3 @@ describe('CIFAR 10 Library', () => {
   });
 });
 
-
-describe('Lib', ()=> {
-  describe('isStream', ()=> {
-    it('should return true for only stream', () => {
-      const sr = stream.Readable();
-
-      assert(isStream(sr));
-      assert(!isStream({}));
-    });
-  });
-});
-  

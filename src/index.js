@@ -4,6 +4,7 @@ import path from 'path';
 import _ from 'lodash';
 
 import { isStream, log } from './lib';
+import cifar10 from './cifar-10';
 
 const trainFileNames = [
   "data_batch_1.bin",

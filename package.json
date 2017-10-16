@@ -1,0 +1,29 @@
+{
+  "name": "cifar-10-js",
+  "version": "0.0.1",
+  "description": "use CIFAR-10 in Javascript",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/grunt mochaTest"
+  },
+  "keywords": [
+    "CIFAR",
+    "NeuralNetwork",
+    "ConvNet"
+  ],
+  "author": "Kiyong Han",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.26.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-mocha-test": "^0.13.3",
+    "mocha": "^4.0.1",
+    "sinon": "^4.0.1"
+  }
+}

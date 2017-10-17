@@ -17,24 +17,30 @@ const trainFileNames = [
 const testFileNames = [ "data_batch_test.bin" ];
 
 export default  {
-  createStream(filename, {highWaterMark}){
-    return fs.createReadStream(filename, {highWaterMark});
+  createStream(filename, {totalSize}){
+    return fs.createReadStream(filename, {highWaterMark:totalSize});
   },
 
-  createPromise(stream, {mapper}) {
-    const output = [];
+  createPromise(stream, config) {
+    let output = [];
+    if (!isStream(stream)) return Promise.resolve([config.mapper(stream)]);
+
     return new Promise((resolve, reject) => {
-      const converter = data => output.push(mapper(data));
-      const resolver = () => resolve(_.flatten(output));
+      const converter = data => output.push(config.mapper(data));
+      const resolver = () => {
+        resolve(output);
+        output = null;
+        stream.removeListener('data', converter)
+        stream.removeListener('end', resolver)
+        stream.removeListener('close', resolver)
+      }
       try {
-        if (isStream(stream)) {
-          stream.on('data', log(converter));
-          stream.on('end', resolver); 
-        }
-        else {
-          converter(stream);
-          resolver();
-        }
+        stream.on('data', converter);
+        // stream.on('data', function() {
+        //   console.log("data")
+        // });
+        stream.on('end', resolver); 
+        stream.on('close', resolver); 
       }
       catch(e){
         reject(e);

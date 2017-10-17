@@ -4,8 +4,10 @@ import _ from 'lodash';
 import fs from 'fs';
 
 import stream from 'stream';
+import path from 'path';
 
 import cifar10 from '../src';
+import cifar10_config from '../src/cifar-10';
 import {isStream} from '../src/lib';
 
 describe('CIFAR 10 Library', () => {
@@ -33,7 +35,7 @@ describe('CIFAR 10 Library', () => {
       cifar10.createStream.restore();
     });
 
-    it('should combine all promises using stream', async () => {
+    xit('should combine all promises using stream', async () => {
       const sr = new stream.Readable();
       sr.push(filename);
       sr.push(null);
@@ -43,6 +45,17 @@ describe('CIFAR 10 Library', () => {
 
       assert.deepEqual( [ filename ], result);
     });
-  });
+
+    it('should return CIFAR10 from test file', async () => {
+      const config = Object.assign({}, cifar10_config, {
+        dir: __dirname
+      });
+      
+      const result = await cifar10.combine([config.getFileName('tc')], config);
+      assert.equal(10, result.length);
+      assert.equal(config.channel, result[0].length);
+      
+    });
+ });
 });
 

@@ -35,15 +35,19 @@ describe('CIFAR 10 Library', () => {
       cifar10.createStream.restore();
     });
 
-    xit('should combine all promises using stream', async () => {
+    it('should combine all promises using stream', () => {
       const sr = new stream.Readable();
-      sr.push(filename);
-      sr.push(null);
-      sinon.stub(fs, 'createReadStream').returns(sr);
+      sr._read = function() {}
+      var mock = sinon.stub(fs, 'createReadStream').returns(sr);
 
-      const result = await cifar10.combine([1], { mapper: str => String(str)});
+      const result = cifar10.combine([1], { mapper: str => String(str)});
 
-      assert.deepEqual( [ filename ], result);
+      sr.emit('data', filename);
+      sr.emit('end');
+      mock.restore();
+      return result.then((result) => {
+        assert.deepEqual( [ filename ], result);
+      });
     });
 
     it('should return CIFAR10 from test file', async () => {
@@ -54,7 +58,6 @@ describe('CIFAR 10 Library', () => {
       const result = await cifar10.combine([config.getFileName('tc')], config);
       assert.equal(10, result.length);
       assert.equal(config.channel, result[0].length);
-      
     });
  });
 });

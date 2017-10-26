@@ -24,9 +24,7 @@ describe('Lib', ()=> {
       const result = bufferSplit(bufs, divider);
 
       assert.equal(divider, result.length);
-
       assert(result.every(s => String(s) == str));
-
     });
   });
 });

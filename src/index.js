@@ -35,10 +35,7 @@ export default  {
         stream.removeListener('close', resolver)
       }
       try {
-        stream.on('data', converter);
-        // stream.on('data', function() {
-        //   console.log("data")
-        // });
+        stream.on('data', converter);        // stream.on('data', function(data) {
         stream.on('end', resolver); 
         stream.on('close', resolver); 
       }
@@ -88,4 +85,3 @@ export default  {
     }
   }
 };
-

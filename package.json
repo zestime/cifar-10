@@ -1,5 +1,5 @@
 {
-  "name": "cifar-10-js",
+  "name": "cifar-10",
   "version": "0.0.1",
   "description": "use CIFAR-10 in Javascript",
   "main": "src/index.js",
@@ -11,9 +11,9 @@
     "sourceMap": false,
     "instrument": false
   },
+  "main" : "src/index.js",
   "scripts": {
-    "nyc": "cross-env NODE_ENV=test ./node_modules/.bin/nyc mocha",
-    "test": "./node_modules/.bin/grunt mochaTest",
+    "test": "nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coveralls": "npm run coverage -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
@@ -33,7 +33,6 @@
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.26.0",
     "coveralls": "^3.0.0",
-    "cross-env": "^5.1.0",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-test": "^0.13.3",

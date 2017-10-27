@@ -6,6 +6,17 @@ function bufferSplit(bufs, divider){
   return range(divider).map(i => bufs.slice(quotient * i, quotient * (i+1)));
 }
 
+function flatten(arr) {
+  return arr.reduce((acc, {X, y}) => {
+    acc.X = acc.X.concat(X);
+    acc.y = acc.y.concat(y);
+    return acc;
+  }, {
+    X: [],
+    y: []
+  });
+} 
+
 function range(start, end=start) {
   if (start === end) start = 0;
   const result = [];
@@ -21,21 +32,10 @@ function isStream(stream) {
     typeof stream.pipe === 'function';
 }
 
-function log(first, ...rest) {
-  if (typeof first === 'function') {
-    return (...args) => _log(first.apply(null, args), args);
-  }
-  return _log([first].concat(rest));
-}
-
-function _log(...rest) {
-  console.log.apply(null, rest);
-  return rest[0];
-}
-
 
 export {
   bufferSplit,
   isStream,
-  log,
+  range,
+  flatten,
 }

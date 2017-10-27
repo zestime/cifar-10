@@ -13,51 +13,97 @@ import {isStream} from '../src/lib';
 describe('CIFAR 10 Library', () => {
   const filename = "TEST.CSV";
   const highWaterMark = 61;
+  const sandbox = sinon.createSandbox();
 
-  describe('Main', () => {
-    it('should set highWaterMark at createStream', () => {
-      const option = {highWaterMark, mapper:_.identity};
-      sinon.stub(cifar10, 'createStream');
 
-      cifar10.combine([filename], option);
-
-      assert(cifar10.createStream.called);
-      sinon.assert.calledWith(cifar10.createStream, filename, option);
-      cifar10.createStream.restore();
+  describe('Main with Stub', () => {
+    let createStream;
+    beforeEach( () => {
+      createStream = sandbox.stub(cifar10, 'createStream'); 
     });
 
-    it('should combine all promises using string', async () => {
-      sinon.stub(cifar10, 'createStream').returns(filename);
-      
-      const result = await cifar10.combine([1], {mapper: str => str.toLowerCase()});
+    afterEach( () => {
+      sandbox.restore();
+    });
+    it('should set highWaterMark at createStream', () => {
+      const option = {highWaterMark, mapper:_.identity};
 
-      assert.deepEqual([filename.toLowerCase()], result);
-      cifar10.createStream.restore();
+      return cifar10.combine([null], option).catch(() => {
+        assert(createStream.called);
+        sinon.assert.calledWith(cifar10.createStream, null, option);
+      });
     });
 
     it('should combine all promises using stream', () => {
       const sr = new stream.Readable();
       sr._read = function() {}
-      var mock = sinon.stub(fs, 'createReadStream').returns(sr);
+      createStream.returns(sr);
 
-      const result = cifar10.combine([1], { mapper: str => String(str)});
-
+      const result = cifar10.combine([1], { 
+        mapper: str => ({X: String(str), y: String(str)})
+      });
       sr.emit('data', filename);
       sr.emit('end');
-      mock.restore();
+
+      const expect = {
+        X: [filename],
+        y: [filename]
+      }
+
       return result.then((result) => {
-        assert.deepEqual( [ filename ], result);
+        assert.deepEqual( expect, result);
+      }).catch((error) => {
+        assert.isNotOk(error,'Promise error');
       });
     });
 
-    it('should return CIFAR10 from test file', async () => {
+    it('should error when streams combine ', () => {
+      const sr = new stream.Readable();
+      sr._read = function() {}
+      createStream.returns(sr);
+
+      const result = cifar10.combine([1], { 
+        mapper: str => ({X: String(str), y: String(str)})
+      });
+      sr.emit('data', {X:[]});
+      sr.emit('end');
+
+      return result.catch((error) => {
+        console.log(error);
+        assert(error);
+      });
+    });
+  });
+
+  describe('with actual files', () => {
+    it('should return CIFAR10 from  a test file', async () => {
       const config = Object.assign({}, cifar10_config, {
         dir: __dirname
       });
       
-      const result = await cifar10.combine([config.getFileName('tc')], config);
-      assert.equal(10, result.length);
-      assert.equal(config.channel, result[0].length);
+      const {X, y} = await cifar10.combine([config.getFileName('tc')], config);
+
+      assert.equal(10, X.length);
+      assert.equal(10, y.length);
+      assert.equal(config.channel, X[0].length);
+    });
+
+    it('should load CIFAR10 test', async () => {
+      const file = __dirname + '/data_batch_tc.bin';
+      const con = {
+        trainFiles: [file, file],
+        testFiles: [file]
+      }
+      const config = Object.assign({}, cifar10_config, con); 
+
+      const { X_train, y_train, X_test, y_test } = await cifar10.load(config);
+
+      assert(X_train);
+      assert(y_train);
+      assert(X_test);
+      assert(y_test);
+      assert.equal(20, X_train.length);
+      assert.equal(10, X_test.length);
     });
 
  });

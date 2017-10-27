@@ -1,6 +1,8 @@
 
 # CIFAR 10 Library for Javascript
 
+[![Build Status](https://travis-ci.org/zestime/cifar-10-js.svg?branch=master)](https://travis-ci.org/zestime/cifar-10-js) [![Coverage Status](https://coveralls.io/repos/github/zestime/cifar-10-js/badge.svg?branch=master)](https://coveralls.io/github/zestime/cifar-10-js?branch=master)
+
 As you know, [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) is famous library in Deep Learning. In python, this library is easy to test, while it is difficult to manuplate it in Javascript. 
 
 ## Features

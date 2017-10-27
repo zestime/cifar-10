@@ -59,6 +59,7 @@ describe('CIFAR 10 Library', () => {
       assert.equal(10, result.length);
       assert.equal(config.channel, result[0].length);
     });
+
  });
 });
 

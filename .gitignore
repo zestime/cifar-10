@@ -1,3 +1,4 @@
 node_modules/
 cifar-10-batches-bin/
 *.swp
+.nyc_output/

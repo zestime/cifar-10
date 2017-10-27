@@ -3,8 +3,19 @@
   "version": "0.0.1",
   "description": "use CIFAR-10 in Javascript",
   "main": "src/index.js",
+  "nyc": {
+    "require": [
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "sourceMap": false,
+    "instrument": false
+  },
   "scripts": {
-    "test": "./node_modules/.bin/grunt mochaTest"
+    "nyc": "cross-env NODE_ENV=test ./node_modules/.bin/nyc mocha",
+    "test": "./node_modules/.bin/grunt mochaTest",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "npm run coverage -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "keywords": [
     "CIFAR",
@@ -17,13 +28,17 @@
     "lodash": "^4.17.4"
   },
   "devDependencies": {
+    "babel-plugin-istanbul": "^4.1.5",
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.26.0",
+    "coveralls": "^3.0.0",
+    "cross-env": "^5.1.0",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^4.0.1",
+    "nyc": "^11.2.1",
     "sinon": "^4.0.1"
   }
 }

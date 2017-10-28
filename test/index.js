@@ -1,4 +1,5 @@
 import sinon from 'sinon';
+import { expect } from 'chai';
 import assert from 'assert';
 import _ from 'lodash';
 import fs from 'fs';
@@ -76,6 +77,17 @@ describe('CIFAR 10 Library', () => {
   });
 
   describe('with actual files', () => {
+    it.only('should error when file is not existed', () => {
+      const con = {
+        trainFiles: [null]
+      }
+      const config = Object.assign({}, cifar10_config, con); 
+
+      return cifar10.load(config).catch(e => 
+        expect(e).to.match(/data file/)
+      );
+    });
+
     it('should return CIFAR10 from  a test file', async () => {
       const config = Object.assign({}, cifar10_config, {
         dir: __dirname

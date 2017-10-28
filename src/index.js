@@ -61,14 +61,22 @@ export default  {
   },
 
   async load(options=cifar10) {
-    const { X: X_train, y: y_train } = await this.combine(options.trainFiles, options);
-    const { X: X_test, y: y_test } = await this.combine(options.testFiles, options);
+    try{
+      const { X: X_train, y: y_train } = await this.combine(options.trainFiles, options);
+      const { X: X_test, y: y_test } = await this.combine(options.testFiles, options);
 
-    return {
-      X_train,
-      y_train,
-      X_test,
-      y_test
+      return {
+        X_train,
+        y_train,
+        X_test,
+        y_test
+      }
+    }
+    catch(e) {
+      if (e instanceof TypeError) { // wrong file name
+        console.error(e, "Data files are not existed. Run 'get_datasets.sh'")
+        throw new Error("missing data file"); 
+      }
     }
   }
 };

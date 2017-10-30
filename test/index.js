@@ -1,21 +1,20 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import assert from 'assert';
-import _ from 'lodash';
 import fs from 'fs';
 
 import stream from 'stream';
 import path from 'path';
 
-import cifar10 from '../src';
-import cifar10_config from '../src/cifar-10';
-import {isStream} from '../src/lib';
+import * as cifar10 from '../src';
+const bufferSplit = cifar10.bufferSplit;
+const isStream = cifar10.isStream;
+const cifar10_config = cifar10.cifar10;
+
 
 describe('CIFAR 10 Library', () => {
-  const filename = "TEST.CSV";
+  const filename = __dirname +  "/data_batch_tc.bin";
   const highWaterMark = 61;
   const sandbox = sinon.createSandbox();
-
 
   describe('Main with Stub', () => {
     let createStream;
@@ -26,11 +25,13 @@ describe('CIFAR 10 Library', () => {
     afterEach( () => {
       sandbox.restore();
     });
-    it('should set highWaterMark at createStream', () => {
-      const option = {highWaterMark, mapper:_.identity};
 
-      return cifar10.combine([null], option).catch(() => {
-        assert(createStream.called);
+    it('should set highWaterMark at createStream', () => {
+      const option = {highWaterMark, mapper:x => x};
+
+      return cifar10.combine([filename], option).catch(() => {
+        console.log('called', createStream.called);
+        sinon.assert.called(createStream);
         sinon.assert.calledWith(cifar10.createStream, null, option);
       });
     });
@@ -46,15 +47,12 @@ describe('CIFAR 10 Library', () => {
       sr.emit('data', filename);
       sr.emit('end');
 
-      const expect = {
-        X: [filename],
-        y: [filename]
-      }
-
-      return result.then((result) => {
-        assert.deepEqual( expect, result);
-      }).catch((error) => {
-        assert.isNotOk(error,'Promise error');
+      return result.then((data) => expect(data).to.deep.equal({
+          X: [filename],
+          y: [filename]
+        })
+      ).catch((error) => {
+        expect(error).to.be.an('error');
       });
     });
 
@@ -70,14 +68,13 @@ describe('CIFAR 10 Library', () => {
       sr.emit('end');
 
       return result.catch((error) => {
-        console.log(error);
-        assert(error);
+        expect(error).to.be.an('error');
       });
     });
   });
 
   describe('with actual files', () => {
-    it.only('should error when file is not existed', () => {
+    it('should error when file is not existed', () => {
       const con = {
         trainFiles: [null]
       }
@@ -94,10 +91,9 @@ describe('CIFAR 10 Library', () => {
       });
       
       const {X, y} = await cifar10.combine([config.getFileName('tc')], config);
-
-      assert.equal(10, X.length);
-      assert.equal(10, y.length);
-      assert.equal(config.channel, X[0].length);
+      expect(X.length).to.equal(10);
+      expect(y.length).to.equal(10);
+      expect(X[0].length).to.equal(config.channel);
     });
 
     it('should load CIFAR10 test', async () => {
@@ -110,14 +106,38 @@ describe('CIFAR 10 Library', () => {
 
       const { X_train, y_train, X_test, y_test } = await cifar10.load(config);
 
-      assert(X_train);
-      assert(y_train);
-      assert(X_test);
-      assert(y_test);
-      assert.equal(20, X_train.length);
-      assert.equal(10, X_test.length);
+      expect(X_train).to.exist;
+      expect(y_train).to.exist;
+      expect(X_test).to.exist;
+      expect(y_test).to.exist;
+      expect(X_train.length).to.equal(20);
+      expect(X_test.length).to.equal(10);
     });
 
  });
 });
 
+describe('Lib', ()=> {
+  describe('isStream', ()=> {
+    it('should return true for only stream', () => {
+      const sr = stream.Readable();
+
+      expect(isStream(sr)).to.be.ok;
+      expect(isStream({})).to.not.be.ok;
+    });
+  });
+
+  describe('bufferSplit', () => {
+    it('should return five Buffers', () => {
+      const divider = 5;
+      const str = "test_str";
+      const bufs = Buffer.from(str.repeat(divider));
+  
+      const result = bufferSplit(bufs, divider);
+
+      expect(result.length).to.equal(divider);
+      expect(result.every(s => String(s) == str)).to.be.ok;
+    });
+  });
+});
+  

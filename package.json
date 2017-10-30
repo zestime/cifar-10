@@ -2,7 +2,10 @@
   "name": "cifar-10",
   "version": "0.0.1",
   "description": "use CIFAR-10 in Javascript",
-  "main": "src/index.js",
+  "main": "dist/index.min.js",
+  "engines": {
+    "node": ">= 7.5.0"
+  },
   "nyc": {
     "require": [
       "babel-register",
@@ -21,23 +24,30 @@
     "NeuralNetwork",
     "ConvNet"
   ],
-  "author": "Kiyong Han",
+  "bugs": {
+    "url": "http://github.com/zestime/cifar-10/issues"
+  },
+  "author": {
+    "name": "Kiyong Han",
+    "email": "zestime@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "babel-plugin-istanbul": "^4.1.5",
-    "babel-polyfill": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
     "coveralls": "^3.0.0",
     "grunt": "^1.0.1",
+    "grunt-babel": "^7.0.0",
+    "grunt-contrib-uglify": "^3.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^4.0.1",
     "nyc": "^11.2.1",
+    "chai": "^4.1.2",
     "sinon": "^4.0.1"
   }
 }

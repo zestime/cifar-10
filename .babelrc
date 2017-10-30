@@ -1,4 +1,7 @@
 {
   presets: ['env'],
-  plugins: ["istanbul"]
+  plugins: [
+    "istanbul",
+    "transform-runtime"
+  ]
 }

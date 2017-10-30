@@ -66,22 +66,17 @@ export const cifar10 = {
 
 /* Main  */
 export function createStream(filename, {totalSize}){
-  const stream = fs.createReadStream(filename, {highWaterMark:totalSize});
+  if (!fs.existsSync(filename)) {
+      throw new Error(`Data files are not existed. Run '${__dirname}/get_datasets.sh'`)
+  }
 
-  stream.on('error', (err) => {
-    if (err.code === 'ENOENT')
-      console.error(`Data files are not existed. Run '${__dirname}/get_datasets.sh'`)
-      throw err;
-  });
+  const stream = fs.createReadStream(filename, {highWaterMark:totalSize});
 
   return stream;
 }
 
 export function createPromise(stream, config) {
   let output = [];
-  if (!isStream(stream)) {
-    return Promise.resolve(config.mapper(stream));
-  }
 
   return new Promise((resolve, reject) => {
     function converter(data) {
@@ -127,21 +122,14 @@ export async function combine(files, options) {
 }
 
 export async function load(options=cifar10) {
-  try{
-    const { X: X_train, y: y_train } = await combine(options.trainFiles, options);
-    const { X: X_test, y: y_test } = await combine(options.testFiles, options);
+  const { X: X_train, y: y_train } = await combine(options.trainFiles, options);
+  const { X: X_test, y: y_test } = await combine(options.testFiles, options);
 
-    return {
-      X_train,
-      y_train,
-      X_test,
-      y_test
-    }
-  }
-  catch(err) {
-    if (err.code === 'ENOENT')
-    console.log(`Data files are not existed. Run '${__dirname}/get_datasets.sh'`)
-    throw err;
+  return {
+    X_train,
+    y_train,
+    X_test,
+    y_test
   }
 }
 

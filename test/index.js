@@ -74,15 +74,26 @@ describe('CIFAR 10 Library', () => {
   });
 
   describe('with actual files', () => {
-    it('should error when file is not existed', () => {
+    it('should error when filename is null', () => {
       const con = {
         trainFiles: [null]
       }
       const config = Object.assign({}, cifar10_config, con); 
 
-      return cifar10.load(config).catch(e => 
-        expect(e).to.match(/data file/)
-      );
+      return cifar10.load(config).catch(e => {
+        expect(e).to.be.an('error');
+      });
+    });
+
+    it('should error when file is not existed', () => {
+      const con = {
+        trainFiles: [filename + '!!']
+      }
+      const config = Object.assign({}, cifar10_config, con); 
+
+      return cifar10.load(config).catch(e => {
+        expect(() => {throw e}).throw(Error, /get_datasets\.sh/);
+      });
     });
 
     it('should return CIFAR10 from  a test file', async () => {

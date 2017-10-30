@@ -1,7 +1,6 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-mocha-test");
   grunt.loadNpmTasks("grunt-babel");
-  grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks("grunt-contrib-uglify");
   grunt.loadNpmTasks("grunt-contrib-watch");
 

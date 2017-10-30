@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import assert from 'assert';
 
+const appDir = path.dirname(require.main.filename);
+
 /* Library */
 export function bufferSplit(bufs, divider){
   assert(bufs.length % divider === 0);
@@ -38,7 +40,7 @@ export function isStream(stream) {
 
 /* Configuration CIFAR-10 */
 export const cifar10 = {
-  dir: path.join(__dirname, 'cifar-10-batches-bin'),
+  dir: path.join(appDir, 'cifar-10-batches-bin'),
   getFileName : function(postfix) {
     return `${this.dir}/data_batch_${postfix}.bin`;
   },

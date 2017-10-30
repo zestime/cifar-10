@@ -1,6 +1,6 @@
 {
   "name": "cifar-10",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "use CIFAR-10 in Javascript",
   "main": "dist/index.min.js",
   "engines": {

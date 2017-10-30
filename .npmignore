@@ -6,3 +6,5 @@ docs/
 examples/
 support/
 test/
+src/
+cifar-10-batches-bin/

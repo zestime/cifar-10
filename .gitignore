@@ -4,4 +4,6 @@ cifar-10-batches-bin/
 .nyc_output/
 package-lock.json
 dist/
+index*
+sourceMap*
 

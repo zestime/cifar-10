@@ -15,6 +15,7 @@
     "instrument": false
   },
   "scripts": {
+    "build": "grunt build",
     "test": "nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "coveralls": "npm run coverage -- --report lcovonly && cat ./coverage/lcov.info | coveralls"

@@ -1,6 +1,6 @@
 {
   "name": "cifar-10",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "use CIFAR-10 in Javascript",
   "main": "dist/index.min.js",
   "engines": {
@@ -27,10 +27,12 @@
   "bugs": {
     "url": "http://github.com/zestime/cifar-10/issues"
   },
-  "author": {
-    "name": "Kiyong Han",
-    "email": "zestime@gmail.com"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zestime/cifar-10.git"
   },
+  "homepage": "https://github.com/zestime/cifar-10#readme",
+  "author": "Kiyong Han",
   "license": "MIT",
   "dependencies": {
     "babel-runtime": "^6.26.0"

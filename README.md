@@ -47,10 +47,18 @@ Return new promise to process data from given option.
 
 ```
 option = {
-  totalSize,    // All bytes for each case
+  totalSize,    // the length of bytes for each case
   mapper,       // binary to matrix mapper
   trainFiles,   // array for files to be a training set
   testFiles,    // array for files to be a testing set
 }
 ```
+For example, [this example](https://github.com/zestime/cifar-10/blob/master/src/index.js#L42) is for CIFAR 10.
+
+# Contributing
+
+PR or issue reporting are always welcome.
+Feel free to report or advice to this project.
+
+
 
